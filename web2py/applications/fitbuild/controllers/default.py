@@ -6,8 +6,11 @@
 
 # ---- example index page ----
 def index():
-    response.flash = T("Hello World")
-    return dict(message=T('Welcome to web2py!'))
+    if not session.counter:
+        session.counter = 1
+    else:
+        session.counter += 1
+    return dict(message="Welcome To Fitbuild", counter=session.counter)
 
 # ---- API (example) -----
 @auth.requires_login()
