@@ -4,13 +4,34 @@
 # this file is released under public domain and you can use without limitations
 # -------------------------------------------------------------------------
 
-# ---- example index page ----
+# index page
 def index():
     if not session.counter:
         session.counter = 1
     else:
         session.counter += 1
     return dict(message="Welcome To Fitbuild", counter=session.counter)
+
+# first page
+def first():
+    form = SQLFORM.factory(Field('visitor_name',
+                                 label='What is your name?',
+                                 requires=IS_NOT_EMPTY()))
+    if form.process().accepted:
+        session.visitor_name = form.vars.visitor_name
+        redirect(URL('second'))
+    return dict(form=form)
+
+    #if request.vars.visitor_name:
+        #session.visitor_name = request.vars.visitor_name
+        #redirect(URL('second'))
+    #return dict()
+
+# second page
+def second():
+    if request.function != 'first' and not session.visitor_name:
+        redirect(URL('first'))
+    return dict()
 
 # ---- API (example) -----
 @auth.requires_login()
